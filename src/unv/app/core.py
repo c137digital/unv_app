@@ -4,7 +4,7 @@ import importlib
 
 import jsonschema
 
-from unv.utils.collections import update_nested_dict
+from unv.utils.collections import update_dict_recur
 
 
 def create_component_settings(
@@ -20,7 +20,7 @@ def create_component_settings(
     settings = copy.deepcopy(default_settings)
 
     if key in app_settings:
-        settings = update_nested_dict(settings, app_settings[key])
+        settings = update_dict_recur(settings, app_settings[key])
 
     validator = jsonschema.Draft4Validator(schema)
     validator.validate(settings)
