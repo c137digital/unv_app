@@ -1,9 +1,12 @@
 import os
 import importlib
+import pathlib
 
 import pytest
 
-from unv.app.core import load_settings, create_component_settings
+from unv.app.core import (
+    load_settings, create_component_settings, get_project_root
+)
 
 
 class InitModule:
@@ -131,3 +134,9 @@ def test_failed_load_settings(monkeypatch):
 ])
 def test_validation_component_settings(settings):
     pass
+
+
+def test_project_root(monkeypatch):
+    monkeypatch.setattr(importlib, 'import_module', import_fake_module)
+
+    assert get_project_root() == pathlib.Path('/some/path/to/app')

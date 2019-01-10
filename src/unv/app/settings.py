@@ -3,6 +3,10 @@ from .core import create_component_settings
 SCHEMA = {
     "type": "object",
     "properties": {
+        "root": {
+            "type": "string",
+            "required": True
+        },
         "debug": {
             "type": "boolean",
             "required": True

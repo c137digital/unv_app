@@ -1,6 +1,7 @@
 import os
 import copy
 import importlib
+import pathlib
 
 import jsonschema
 
@@ -58,3 +59,9 @@ def load_settings(module_path: str = 'app.settings.development') -> dict:
                 current_settings = current_settings.setdefault(part, {})
 
     return settings
+
+
+def get_project_root(app_module: str = 'app.settings') -> pathlib.Path:
+    """Return project root path, outside "src" directory."""
+    from .settings import SETTINGS
+    return SETTINGS['root']
