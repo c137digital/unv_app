@@ -1,7 +1,6 @@
 import os
 import copy
 import importlib
-import pathlib
 
 import jsonschema
 
@@ -9,11 +8,10 @@ from unv.utils.collections import update_dict_recur
 
 
 def create_component_settings(
-        key: str, default_settings: dict, schema: dict,
-        app_module='app.settings') -> dict:
+        key: str, default_settings: dict, schema: dict) -> dict:
     """Create and validate application component settings."""
     try:
-        module = importlib.import_module(app_module)
+        module = importlib.import_module('app.settings')
         app_settings = module.SETTINGS
     except (ImportError, AttributeError):
         app_settings = {}
@@ -59,9 +57,3 @@ def load_settings(module_path: str = 'app.settings.development') -> dict:
                 current_settings = current_settings.setdefault(part, {})
 
     return settings
-
-
-def get_project_root(app_module: str = 'app.settings') -> pathlib.Path:
-    """Return project root path, outside "src" directory."""
-    from .settings import SETTINGS
-    return SETTINGS['root']

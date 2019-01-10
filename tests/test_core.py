@@ -1,12 +1,14 @@
 import os
 import importlib
+import imp
 import pathlib
 
 import pytest
 
-from unv.app.core import (
-    load_settings, create_component_settings, get_project_root
-)
+import unv.app.settings
+
+from unv.app.core import load_settings, create_component_settings
+from unv.app.helpers import get_project_root
 
 
 class InitModule:
@@ -18,6 +20,7 @@ class DevelopmentModule:
     def __init__(self):
         self.SETTINGS = {
             'app': {
+                'root': '/some/path/to/app',
                 'debug': True,
                 'port': 8090,
                 'items': [1, 2, 3]
@@ -50,6 +53,7 @@ class SomeComponentModule:
             'type': 'object',
             'additionalProperties': False,
             'properties': {
+                'root': {'type': 'string'},
                 'debug': {'type': 'boolean'},
                 'items': {'type': 'array', 'items': {'type': 'integer'}},
                 'port': {'type': 'integer', 'required': True}
@@ -85,7 +89,10 @@ def import_fake_module(name):
 
 @pytest.mark.parametrize('env, settings', [
     ({}, {
-        'app': {'debug': True, 'items': [1, 2, 3], 'port': 8090},
+        'app': {
+            'root': '/some/path/to/app', 'debug': True,
+            'items': [1, 2, 3], 'port': 8090
+        },
         'otherkey': {'debug': False, 'items': [1]}
     }),
     ({'SETTINGS': 'app.settings.production'}, {
@@ -97,7 +104,10 @@ def import_fake_module(name):
         'OVERRIDE_SETTINGS_OTHERKEY_DEBUG': 'True',
         'OVERRIDE_SETTINGS_APP_PORT': '9020'
     }, {
-        'app': {'debug': False, 'items': [1, 2, 3], 'port': 9020},
+        'app': {
+            'root': '/some/path/to/app',
+            'debug': False, 'items': [1, 2, 3], 'port': 9020
+        },
         'otherkey': {'debug': True, 'items': [1]}
     })
 ])
@@ -119,13 +129,14 @@ def test_success_load_settings(monkeypatch, env, settings):
 
 
 def test_failed_load_settings(monkeypatch):
+    create_component_settings('somekey', {}, {})
+
     monkeypatch.setattr(importlib, 'import_module', import_fake_module)
 
     with pytest.raises(ImportError):
         load_settings('some_not_found_path.for.development')
 
-    create_component_settings(
-        'somekey', {}, {}, app_module='app.somenotfound')
+    create_component_settings('somekey', {}, {})
 
 
 @pytest.mark.parametrize('settings', [
@@ -138,5 +149,7 @@ def test_validation_component_settings(settings):
 
 def test_project_root(monkeypatch):
     monkeypatch.setattr(importlib, 'import_module', import_fake_module)
+    imp.reload(unv.app.settings)
+    imp.reload(unv.app.helpers)
 
     assert get_project_root() == pathlib.Path('/some/path/to/app')
