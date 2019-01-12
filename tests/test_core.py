@@ -1,11 +1,8 @@
 import os
 import importlib
-import imp
 import pathlib
 
 import pytest
-
-import unv.app.settings
 
 from unv.app.core import load_settings, create_component_settings
 from unv.app.helpers import get_project_root
