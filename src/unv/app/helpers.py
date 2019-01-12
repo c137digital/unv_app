@@ -1,3 +1,4 @@
+import os
 import importlib
 import pathlib
 
@@ -12,4 +13,6 @@ def get_app_components():
 
 def get_project_root(app_module: str = 'app.settings') -> pathlib.Path:
     """Return project root path, outside "src" directory."""
-    return pathlib.Path(SETTINGS['root'])
+    module_path = os.environ.get('SETTINGS', 'app.settings')
+    module = importlib.import_module(module_path)
+    return pathlib.Path(module.__file__).parent

@@ -10,12 +10,9 @@ from unv.utils.collections import update_dict_recur
 def create_component_settings(
         key: str, default_settings: dict, schema: dict) -> dict:
     """Create and validate application component settings."""
-    try:
-        module = importlib.import_module('app.settings')
-        app_settings = module.SETTINGS
-    except (ImportError, AttributeError):
-        app_settings = {}
-
+    module_path = os.environ.get('SETTINGS', 'app.settings')
+    module = importlib.import_module(module_path)
+    app_settings = module.SETTINGS
     settings = copy.deepcopy(default_settings)
 
     if key in app_settings:
