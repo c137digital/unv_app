@@ -1,46 +1,44 @@
 import os
 import importlib
-import pathlib
 
 import pytest
 
-from unv.app.core import load_settings, create_component_settings
-from unv.app.helpers import get_project_root
+from unv.app.core import create_settings, create_component_settings
 
 
 class InitModule:
     def __init__(self):
-        self.SETTINGS = load_settings()
+        self.SETTINGS = create_settings()
 
 
 class DevelopmentModule:
     def __init__(self):
-        self.SETTINGS = {
+        self.SETTINGS = create_settings({
             'app': {
                 'debug': True,
                 'port': 8090,
                 'items': [1, 2, 3]
             }
-        }
+        })
 
 
 class ProductionModule:
     def __init__(self):
-        self.SETTINGS = {
+        self.SETTINGS = create_settings({
             'app': {
                 'debug': False,
                 'port': 80,
                 'items': [3, 2, 1]
             },
             'otherkey': {'debug': True, 'items': [10, 10, 10]}
-        }
+        })
 
 
 class InvalidSettingsModule:
     def __init__(self):
-        self.SETTINGS = {
+        self.SETTINGS = create_settings({
             'otherkey': {'debug': 1, 'items': ['asd', 10, 10]}
-        }
+        })
 
 
 class SomeComponentModule:
@@ -68,7 +66,6 @@ class OtherComponentModule(SomeComponentModule):
 
 
 MODULES = {
-    'app.settings': InitModule,
     'app.settings.development': DevelopmentModule,
     'app.settings.production': ProductionModule,
     'app.components.some.settings': SomeComponentModule,
@@ -105,7 +102,8 @@ def test_success_load_settings(monkeypatch, env, settings):
     monkeypatch.setattr(os, 'environ', env)
 
     # main settings
-    app_module = importlib.import_module('app.settings')
+    app_module = importlib.import_module(
+        os.environ.get('SETTINGS', 'app.settings.development'))
     assert app_module.SETTINGS['app'] == settings['app']
 
     # first component
@@ -121,9 +119,10 @@ def test_failed_load_settings(monkeypatch):
     create_component_settings('somekey', {}, {})
 
     monkeypatch.setattr(importlib, 'import_module', import_fake_module)
+    monkeypatch.setattr(
+        os, 'environ', {'SETTINGS': 'some_not_found_path.for.development'})
 
     with pytest.raises(ImportError):
-        load_settings('some_not_found_path.for.development')
         create_component_settings('somekey', {}, {})
 
 
@@ -133,7 +132,3 @@ def test_failed_load_settings(monkeypatch):
 ])
 def test_validation_component_settings(settings):
     pass
-
-
-def test_project_root(monkeypatch):
-    assert get_project_root() == pathlib.Path(__file__).parent
