@@ -11,6 +11,10 @@ SCHEMA = {
             "type": "boolean",
             "required": True
         },
+        "path": {
+            "type": "string",
+            "required": True
+        },
         "components": {
             "type": "array",
             "items": {"type": "string"},
@@ -20,6 +24,7 @@ SCHEMA = {
 }
 
 DEFAULTS = {
+    "path": ".",
     'debug': False,
     'components': [],
 }

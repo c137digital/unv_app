@@ -1,4 +1,5 @@
 import importlib
+import pathlib
 
 from .settings import SETTINGS
 
@@ -10,3 +11,7 @@ def get_app_components():
             yield importlib.import_module(component)
         except ModuleNotFoundError:
             continue
+
+
+def project_path(*parts):
+    return str(pathlib.Path(SETTINGS['root'], *parts))
