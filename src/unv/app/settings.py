@@ -1,4 +1,7 @@
+from unv.utils.os import get_homepath
+
 from .core import create_component_settings
+
 
 SCHEMA = {
     "type": "object",
@@ -24,7 +27,7 @@ SCHEMA = {
 }
 
 DEFAULTS = {
-    "path": ".",
+    "root": str(get_homepath()),
     'debug': False,
     'components': [],
 }
