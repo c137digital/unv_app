@@ -24,8 +24,8 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src'),
     install_requires=[
-        'jsonschema==2.6.0',
-        'unv.utils==0.1.1'
+        'jsonschema',
+        'unv.utils'
     ],
     zip_safe=True
 )
