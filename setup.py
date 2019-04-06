@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='unv.app',
-    version='0.2.5',
+    version='0.2.6',
     description="""Core app package with settings manipulation""",
     url='http://github.com/c137digital/unv_app',
     author='Morty Space',
@@ -24,7 +24,7 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src'),
     install_requires=[
-        'jsonschema',
+        'cerberus',
         'unv.utils'
     ],
     zip_safe=True

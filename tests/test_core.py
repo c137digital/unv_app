@@ -46,13 +46,9 @@ class InvalidSettingsModule:
 class SomeComponentModule:
     def __init__(self, key='app'):
         self.SCHEMA = {
-            'type': 'object',
-            'additionalProperties': False,
-            'properties': {
-                'debug': {'type': 'boolean'},
-                'items': {'type': 'array', 'items': {'type': 'integer'}},
-                'port': {'type': 'integer', 'required': True}
-            }
+            'debug': {'type': 'boolean'},
+            'items': {'type': 'list', 'schema': {'type': 'integer'}},
+            'port': {'type': 'integer'}
         }
         self.DEFAULT = {
             'debug': False,
@@ -91,9 +87,9 @@ def import_fake_module(name):
         'otherkey': {'debug': True, 'items': [10, 10, 10]}
     }),
     ({
-        'OVERRIDE_SETTINGS_APP_DEBUG': 'False',
-        'OVERRIDE_SETTINGS_OTHERKEY_DEBUG': 'True',
-        'OVERRIDE_SETTINGS_APP_PORT': '9020'
+        'SETTINGS_APP_DEBUG': 'False',
+        'SETTINGS_OTHERKEY_DEBUG': 'True',
+        'SETTINGS_APP_PORT': '9020'
     }, {
         'app': {'debug': False, 'items': [1, 2, 3], 'port': 9020},
         'otherkey': {'debug': True, 'items': [1]}
@@ -133,6 +129,7 @@ def test_failed_load_settings(monkeypatch):
     'app.settings.invalid.schema_error'
 ])
 def test_validation_component_settings(settings):
+    # TODO: add negative cases
     pass
 
 

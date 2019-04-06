@@ -4,31 +4,24 @@ from .core import create_component_settings
 
 
 SCHEMA = {
-    "type": "object",
-    "properties": {
-        "root": {
-            "type": "string",
-            "required": True
-        },
-        "debug": {
-            "type": "boolean",
-            "required": True
-        },
-        "path": {
-            "type": "string",
-            "required": True
-        },
-        "components": {
-            "type": "array",
-            "items": {"type": "string"},
-            "required": True
-        }
+    'root': {
+        'empty': False,
+        'type': 'string',
+    },
+    'env': {
+        'type': 'string',
+        'allowed': ['production', 'development', 'testing']
+    },
+    'components': {
+        'type': 'list',
+        'empty': True,
+        'schema': {'type': 'string'},
     }
 }
 
 DEFAULTS = {
-    "root": str(get_homepath()),
-    'debug': False,
+    'root': str(get_homepath()),
+    'env': 'development',
     'components': [],
 }
 
