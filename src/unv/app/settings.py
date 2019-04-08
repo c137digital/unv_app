@@ -4,6 +4,11 @@ from .core import create_component_settings
 
 
 SCHEMA = {
+    'name': {
+        'empty': False,
+        'type': 'string',
+        'required': True
+    },
     'root': {
         'empty': False,
         'type': 'string',

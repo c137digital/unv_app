@@ -31,6 +31,8 @@ def create_component_settings(
 def create_settings(settings: dict = None, base_settings: dict = None) -> dict:
     """Create app settings from provided base settings, overrided by env."""
     settings = settings or {}
+    if base_settings:
+        settings = update_dict_recur(settings, base_settings)
     for key, value in os.environ.items():
         if 'SETTINGS_' not in key:
             continue
