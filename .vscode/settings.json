@@ -6,7 +6,6 @@
     "python.linting.enabled": true,
     "python.linting.prospectorEnabled": true,
     "python.formatting.provider": "autopep8",
-    "gitlens.currentLine.scrollable": false,
     "editor.renderWhitespace": "all",
     "editor.tabSize": 4,
     "editor.rulers": [80],
@@ -26,5 +25,5 @@
     },
     "files.insertFinalNewline": true,
     "git.ignoreLimitWarning": true,
-    "restructuredtext.confPath": "${workspaceFolder}/docs/source"
+    "restructuredtext.confPath": "${workspaceFolder}/docs/source",
 }
