@@ -1,11 +1,9 @@
 import os
-import pathlib
 import importlib
 
 import pytest
 
 from unv.app.core import create_settings, create_component_settings
-from unv.app.helpers import project_path
 
 
 class InitModule:
@@ -131,8 +129,3 @@ def test_failed_load_settings(monkeypatch):
 def test_validation_component_settings(settings):
     # TODO: add negative cases
     pass
-
-
-def test_project_root_helper():
-    assert project_path('static') == str(
-        pathlib.Path(__file__).parent / 'static')

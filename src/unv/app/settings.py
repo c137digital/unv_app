@@ -1,14 +1,7 @@
-from unv.utils.os import get_homepath
-
 from .core import create_component_settings
 
 
 SCHEMA = {
-    'root': {
-        'empty': False,
-        'type': 'string',
-        'required': True
-    },
     'env': {
         'type': 'string',
         'allowed': ['production', 'development', 'testing'],
@@ -23,13 +16,12 @@ SCHEMA = {
 }
 
 DEFAULTS = {
-    'root': str(get_homepath()),
     'env': 'development',
     'components': [],
 }
 
 SETTINGS = create_component_settings('app', DEFAULTS, SCHEMA)
 
-DEVELOPMENT = SETTINGS['env'] == 'development'
-PRODUCTION = SETTINGS['env'] == 'production'
-TESTING = SETTINGS['env'] == 'testing'
+IS_DEBUG = IS_DEVELOPMENT = SETTINGS['env'] == 'development'
+IS_PRODUCTION = SETTINGS['env'] == 'production'
+IS_TESTING = SETTINGS['env'] == 'testing'
