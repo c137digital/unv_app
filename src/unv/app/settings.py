@@ -1,27 +1,34 @@
-from .core import create_component_settings
+from .core import ComponentSettings
 
 
-SCHEMA = {
-    'env': {
-        'type': 'string',
-        'allowed': ['production', 'development', 'testing'],
-        'required': True
-    },
-    'components': {
-        'type': 'list',
-        'empty': True,
-        'schema': {'type': 'string'},
-        'required': True
+class AppSettings(ComponentSettings):
+    KEY = 'app'
+    SCHEMA = {
+        'env': {
+            'type': 'string',
+            'allowed': ['production', 'development', 'testing'],
+            'required': True
+        },
+        'components': {
+            'type': 'list',
+            'empty': True,
+            'schema': {'type': 'string'},
+            'required': True
+        }
     }
-}
+    DEFAULTS = {
+        'env': 'development',
+        'components': [],
+    }
 
-DEFAULTS = {
-    'env': 'development',
-    'components': [],
-}
+    def is_development(self):
+        return self._data['env'] == 'development'
 
-SETTINGS = create_component_settings('app', DEFAULTS, SCHEMA)
+    def is_production(self):
+        return self._data['env'] == 'production'
 
-IS_DEBUG = IS_DEVELOPMENT = SETTINGS['env'] == 'development'
-IS_PRODUCTION = SETTINGS['env'] == 'production'
-IS_TESTING = SETTINGS['env'] == 'testing'
+    def is_testing(self):
+        return self._data['env'] == 'testing'
+
+
+SETTINGS = AppSettings()

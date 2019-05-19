@@ -3,17 +3,17 @@ import importlib
 
 import pytest
 
-from unv.app.core import create_settings, create_component_settings
+from unv.app.core import ComponentSettings
 
 
 class InitModule:
     def __init__(self):
-        self.SETTINGS = create_settings()
+        self.SETTINGS = ComponentSettings.create()
 
 
 class DevelopmentModule:
     def __init__(self):
-        self.SETTINGS = create_settings({
+        self.SETTINGS = ComponentSettings.create({
             'app': {
                 'debug': True,
                 'port': 8090,
@@ -24,7 +24,7 @@ class DevelopmentModule:
 
 class ProductionModule:
     def __init__(self):
-        self.SETTINGS = create_settings({
+        self.SETTINGS = ComponentSettings.create({
             'app': {
                 'debug': False,
                 'port': 80,
@@ -36,24 +36,26 @@ class ProductionModule:
 
 class InvalidSettingsModule:
     def __init__(self):
-        self.SETTINGS = create_settings({
+        self.SETTINGS = ComponentSettings.create({
             'otherkey': {'debug': 1, 'items': ['asd', 10, 10]}
         })
 
 
 class SomeComponentModule:
     def __init__(self, key='app'):
-        self.SCHEMA = {
-            'debug': {'type': 'boolean'},
-            'items': {'type': 'list', 'schema': {'type': 'integer'}},
-            'port': {'type': 'integer'}
-        }
-        self.DEFAULT = {
-            'debug': False,
-            'items': [1]
-        }
-        self.SETTINGS = \
-            create_component_settings(key, self.DEFAULT, self.SCHEMA)
+        class SomeSettings(ComponentSettings):
+            KEY = key
+            SCHEMA = {
+                'debug': {'type': 'boolean'},
+                'items': {'type': 'list', 'schema': {'type': 'integer'}},
+                'port': {'type': 'integer'}
+            }
+            DEFAULT = {
+                'debug': False,
+                'items': [1]
+            }
+
+        self.SETTINGS = SomeSettings()
 
 
 class OtherComponentModule(SomeComponentModule):
@@ -97,29 +99,29 @@ def test_success_load_settings(monkeypatch, env, settings):
     monkeypatch.setattr(importlib, 'import_module', import_fake_module)
     monkeypatch.setattr(os, 'environ', env)
 
-    # main settings
-    app_module = importlib.import_module(
-        os.environ.get('SETTINGS', 'app.settings.development'))
-    assert app_module.SETTINGS['app'] == settings['app']
-
     # first component
     comp_module = importlib.import_module('app.components.some.settings')
-    assert comp_module.SETTINGS == settings['app']
+    assert comp_module.SETTINGS._data == settings['app']
 
     # second other component
     comp_module = importlib.import_module('app.components.other.settings')
-    assert comp_module.SETTINGS == settings['otherkey']
+    assert comp_module.SETTINGS._data == settings['otherkey']
 
 
 def test_failed_load_settings(monkeypatch):
-    create_component_settings('somekey', {}, {})
+    class SomeSettings(ComponentSettings):
+        KEY = 'somekey'
+        SCHEMA = {}
+        DEFAULTS = {}
+
+    SomeSettings()
 
     monkeypatch.setattr(importlib, 'import_module', import_fake_module)
     monkeypatch.setattr(
         os, 'environ', {'SETTINGS': 'some_not_found_path.for.development'})
 
     with pytest.raises(ImportError):
-        create_component_settings('somekey', {}, {})
+        SomeSettings()
 
 
 @pytest.mark.parametrize('settings', [
