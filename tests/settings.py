@@ -1,3 +1,9 @@
 from unv.app.core import ComponentSettings
 
-SETTINGS = ComponentSettings.create()
+SETTINGS = ComponentSettings.create({
+    'app': {
+        'components': [
+            'component',
+        ]
+    }
+})

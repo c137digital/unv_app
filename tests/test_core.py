@@ -4,6 +4,7 @@ import importlib
 import pytest
 
 from unv.app.core import ComponentSettings
+from unv.app.settings import SETTINGS
 
 
 class InitModule:
@@ -50,7 +51,7 @@ class SomeComponentModule:
                 'items': {'type': 'list', 'schema': {'type': 'integer'}},
                 'port': {'type': 'integer'}
             }
-            DEFAULT = {
+            DEFAULTS = {
                 'debug': False,
                 'items': [1]
             }
@@ -106,6 +107,14 @@ def test_success_load_settings(monkeypatch, env, settings):
     # second other component
     comp_module = importlib.import_module('app.components.other.settings')
     assert comp_module.SETTINGS._data == settings['otherkey']
+
+
+def test_app_components_with_env():
+    assert SETTINGS.is_development
+    assert not SETTINGS.is_production
+    assert not SETTINGS.is_testing
+
+    assert list(SETTINGS.get_components())
 
 
 def test_failed_load_settings(monkeypatch):

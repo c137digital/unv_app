@@ -45,6 +45,10 @@ class ComponentSettings:
         return settings
 
     def __init__(self):
+        key = self.__class__.KEY
+        if not key:
+            raise ValueError(f"Provide 'KEY' for settings")
+
         module_path = os.environ.get('SETTINGS', 'app.settings.development')
         module = importlib.import_module(module_path)
 
