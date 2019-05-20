@@ -18,7 +18,7 @@ class AppSettings(ComponentSettings):
             'required': True
         }
     }
-    DEFAULTS = {
+    DEFAULT = {
         'env': 'development',
         'components': [],
     }

@@ -51,7 +51,7 @@ class SomeComponentModule:
                 'items': {'type': 'list', 'schema': {'type': 'integer'}},
                 'port': {'type': 'integer'}
             }
-            DEFAULTS = {
+            DEFAULT = {
                 'debug': False,
                 'items': [1]
             }
@@ -121,7 +121,7 @@ def test_failed_load_settings(monkeypatch):
     class SomeSettings(ComponentSettings):
         KEY = 'somekey'
         SCHEMA = {}
-        DEFAULTS = {}
+        DEFAULT = {}
 
     SomeSettings()
 

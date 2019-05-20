@@ -20,7 +20,7 @@ def convert_value(value):
 class ComponentSettings:
     KEY = ''
     SCHEMA = {}
-    DEFAULTS = {}
+    DEFAULT = {}
 
     @staticmethod
     def create(settings: dict = None, base_settings: dict = None) -> dict:
@@ -55,7 +55,7 @@ class ComponentSettings:
         app_settings = module.SETTINGS
         app_schema = getattr(module, 'SCHEMA', {})
 
-        settings = copy.deepcopy(self.__class__.DEFAULTS)
+        settings = copy.deepcopy(self.__class__.DEFAULT)
         settings = update_dict_recur(
             settings, app_settings.get(self.__class__.KEY, {}))
 
