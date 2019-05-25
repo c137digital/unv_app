@@ -68,3 +68,16 @@ class ComponentSettings:
 
         self._data = settings
         self._schema = schema
+
+
+class Application:
+    """Used for setup in other components to provide universal way
+    of starting and decomposing apps."""
+    def __init__(self):
+        self.run = []
+        self.tasks = []
+        # self.onclose
+
+    def web(self):
+        """Analog of aiohttp app via mixins."""
+        pass
