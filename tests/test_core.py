@@ -3,8 +3,7 @@ import importlib
 
 import pytest
 
-from unv.app.core import ComponentSettings
-from unv.app.settings import SETTINGS
+from unv.app.settings import ComponentSettings, SETTINGS
 
 
 class InitModule:
