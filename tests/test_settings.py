@@ -78,7 +78,7 @@ def import_fake_module(name):
 
 
 @pytest.mark.parametrize('env, settings', [
-    ({}, {
+    ({'SETTINGS': 'app.settings.development'}, {
         'app': {'debug': True, 'items': [1, 2, 3], 'port': 8090},
         'otherkey': {'debug': False, 'items': [1]}
     }),
@@ -87,6 +87,7 @@ def import_fake_module(name):
         'otherkey': {'debug': True, 'items': [10, 10, 10]}
     }),
     ({
+        'SETTINGS': 'app.settings.development',
         'SETTINGS_APP_DEBUG': 'False',
         'SETTINGS_OTHERKEY_DEBUG': 'True',
         'SETTINGS_APP_PORT': '9020'

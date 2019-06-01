@@ -49,25 +49,22 @@ class ComponentSettings:
         if not key:
             raise ValueError(f"Provide 'KEY' for settings")
 
-        module_path = os.environ.get('SETTINGS', 'app.settings.development')
-        module = importlib.import_module(module_path)
-
-        app_settings = module.SETTINGS
-        app_schema = getattr(module, 'SCHEMA', {})
+        if 'SETTINGS' in os.environ:
+            module_path = os.environ['SETTINGS']
+            module = importlib.import_module(module_path)
+            app_settings = module.SETTINGS
+        else:
+            app_settings = {}
 
         settings = copy.deepcopy(self.__class__.DEFAULT)
         settings = update_dict_recur(
             settings, app_settings.get(self.__class__.KEY, {}))
 
-        schema = app_schema.get(
-            self.__class__.KEY, self.__class__.SCHEMA)
-
-        validator = cerberus.Validator(schema)
+        validator = cerberus.Validator(self.__class__.SCHEMA)
         if not validator.validate(settings):
             raise ValueError(f"Error validation settings {validator.errors}")
 
         self._data = settings
-        self._schema = schema
 
 
 class AppSettings(ComponentSettings):
