@@ -1,5 +1,9 @@
 from unv.app.base import Application
 
 
+def multiply():
+    print('multiply', 2 * 2)
+
+
 def setup(app: Application):
-    pass
+    app.register_run_task(multiply)
