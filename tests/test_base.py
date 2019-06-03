@@ -12,7 +12,7 @@ class WebApplication:
         self.called_from_another_setup = False
         self.components_count = 0
 
-    def run(self):
+    def run(self, app: Application):
         self.called_run_task = True
 
     async def async_run(self):
@@ -28,24 +28,24 @@ def test_raise_already_registered():
         app.register(Application())
 
 
-def test_raise_not_unregister_self():
+def test_raise_del_self():
     app = Application()
     with pytest.raises(ValueError):
-        app.unregister(app)
+        del app[Application]
 
 
-def test_unregister():
+def test_del():
     app = Application()
     web_app = WebApplication()
     app.register(web_app)
-    app.unregister(web_app)
-    assert len(app.apps) == 1
+    del app[WebApplication]
+    assert len(app.registry) == 1
 
 
 class WebFakeModule:
     @staticmethod
-    def link_components(app):
-        web_app = app.apps[WebApplication]
+    def link_components(app: Application):
+        web_app = app[WebApplication]
         for component in app.components:
             web_app.components_count += 1
 
@@ -54,10 +54,10 @@ class WebFakeModule:
         web_app = WebApplication()
 
         app.register(web_app)
-        app.add_setup_task(cls.link_components)
-        app.add_run_task(web_app.run)
-        app.add_run_task(web_app.async_run)
-        app.add_run_task(web_app.async_run)
+        app.register_setup_task(cls.link_components)
+        app.register_run_task(web_app.run)
+        app.register_run_task(web_app.async_run)
+        app.register_run_task(web_app.async_run)
 
 
 class AppUseWebFakeModule:
@@ -73,7 +73,7 @@ def test_setup_called_for_custom_app(monkeypatch):
 
     app = Application()
 
-    web_app = app.apps[WebApplication]
+    web_app = app[WebApplication]
     assert web_app.called_setup
     assert web_app.called_from_another_setup
 

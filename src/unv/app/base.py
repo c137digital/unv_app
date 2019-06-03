@@ -9,7 +9,7 @@ class Application:
     of decomposing apps."""
 
     def __init__(self, setup: bool = True):
-        self.apps = {type(self): self}
+        self.registry = {type(self): self}
         self.run_tasks = []
         self.async_run_tasks = []
         self.setup_tasks = []
@@ -19,52 +19,57 @@ class Application:
 
     def register(self, app):
         type_ = type(app)
-        if type_ in self.apps:
+        if type_ in self.registry:
             raise ValueError(f'App type: "{type_}" already registered')
-        self.apps[type_] = app
+        self.registry[type_] = app
 
-    def unregister(self, app):
-        type_ = type(app)
+    def __getitem__(self, type_):
+        return self.registry[type_]
+
+    def __delitem__(self, type_):
         if type_ == type(self):
             raise ValueError(f'Do not unregister self-app: "{type_}"')
-        self.apps.pop(type_, None)
+        self.registry.pop(type_)
 
     @property
     def components(self):
         return SETTINGS.get_components()
 
-    def add_run_task(self, func):
+    def register_run_task(self, func):
         if inspect.iscoroutinefunction(func):
             self.async_run_tasks.append(func)
         else:
             self.run_tasks.append(func)
 
-    def add_setup_task(self, func):
+    def register_setup_task(self, func):
         self.setup_tasks.append(func)
+
+    def _app_call(self, func):
+        annotations = inspect.getfullargspec(func).annotations
+        kwargs = {
+            name: self.registry[type_]
+            for name, type_ in annotations.items()
+            if type_ in self.registry
+        }
+        return func(**kwargs)
 
     def setup(self):
         for component in self.components:
-            annotations = inspect.getfullargspec(component.setup).annotations
-            kwargs = {
-                name: self.apps[type_]
-                for name, type_ in annotations.items()
-                if type_ in self.apps
-            }
-            component.setup(**kwargs)
+            self._app_call(component.setup)
 
         for task in self.setup_tasks:
-            task(self)
+            self._app_call(task)
 
     def run(self):
         for task in self.run_tasks:
-            task()
+            self._app_call(task)
 
         if not self.async_run_tasks:
             return
 
         async def async_tasks():
             await asyncio.gather(*[
-                task() for task in self.async_run_tasks
+                self._app_call(task) for task in self.async_run_tasks
             ], return_exceptions=True)
 
         asyncio.run(async_tasks())
