@@ -17,6 +17,13 @@ def _convert_value(value):
     return value
 
 
+def validate_schema(schema, settings):
+    validator = cerberus.Validator(schema)
+    if not validator.validate(settings):
+        raise ValueError(f"Error validation settings {validator.errors}")
+    return settings
+
+
 class ComponentSettings:
     KEY = ''
     SCHEMA = {}
@@ -59,10 +66,7 @@ class ComponentSettings:
         settings = copy.deepcopy(self.__class__.DEFAULT)
         settings = update_dict_recur(
             settings, app_settings.get(self.__class__.KEY, {}))
-
-        validator = cerberus.Validator(self.__class__.SCHEMA)
-        if not validator.validate(settings):
-            raise ValueError(f"Error validation settings {validator.errors}")
+        settings = validate_schema(self.__class__.SCHEMA, settings)
 
         self._data = settings
 
