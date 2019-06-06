@@ -76,7 +76,7 @@ class AppSettings(ComponentSettings):
     SCHEMA = {
         'env': {
             'type': 'string',
-            'allowed': ['production', 'development', 'testing'],
+            'allowed': ['prod', 'dev', 'test'],
             'required': True
         },
         'components': {
@@ -87,21 +87,21 @@ class AppSettings(ComponentSettings):
         }
     }
     DEFAULT = {
-        'env': 'development',
+        'env': 'prod',
         'components': [],
     }
 
     @property
-    def is_development(self):
-        return self._data['env'] == 'development'
+    def is_dev(self):
+        return self._data['env'] == 'dev'
 
     @property
-    def is_production(self):
-        return self._data['env'] == 'production'
+    def is_prod(self):
+        return self._data['env'] == 'prod'
 
     @property
-    def is_testing(self):
-        return self._data['env'] == 'testing'
+    def is_test(self):
+        return self._data['env'] == 'test'
 
     def get_components(self):
         for component in self._data['components']:
