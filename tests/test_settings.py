@@ -109,10 +109,10 @@ def test_success_load_settings(monkeypatch, env, settings):
     assert comp_module.SETTINGS._data == settings['otherkey']
 
 
-def test_app_components_with_env():
-    assert SETTINGS.is_development
-    assert not SETTINGS.is_production
-    assert not SETTINGS.is_testing
+def test_app_components_with_env_default():
+    assert not SETTINGS.is_dev
+    assert SETTINGS.is_prod
+    assert not SETTINGS.is_test
 
     assert list(SETTINGS.get_components())
 
