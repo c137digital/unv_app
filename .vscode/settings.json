@@ -20,6 +20,9 @@
         "**/.pytest_cache": true,
         ".coverage": true,
         "cov.xml": true,
+        "dist": true,
+        "build": true,
+        "**/**.egg-info": true
     },
     "files.watcherExclude": {
         "**/.git/**": true,
