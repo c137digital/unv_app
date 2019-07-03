@@ -1,5 +1,7 @@
+import signal
 import inspect
 import asyncio
+import weakref
 
 from .settings import SETTINGS
 
@@ -9,13 +11,27 @@ class Application:
     of decomposing apps."""
 
     def __init__(self, setup: bool = True):
-        self.registry = {type(self): self}
-        self.run_tasks = []
+        self.registry = {type(self): weakref.proxy(self)}
+
         self.async_run_tasks = []
+        self.async_cleanup_tasks = []
+
+        self.run_tasks = []
+        self.cleanup_tasks = []
+
         self.setup_tasks = []
 
         if setup:
             self.setup()
+
+        self.cleaning = False
+
+        loop = asyncio.get_event_loop()
+
+        for sig in [signal.SIGINT, signal.SIGTERM]:
+            loop.add_signal_handler(sig, self.cleanup)
+            signal.signal(sig, self.cleanup)
+
 
     def register(self, app):
         type_ = type(app)
@@ -44,6 +60,12 @@ class Application:
     def register_setup_task(self, func):
         self.setup_tasks.append(func)
 
+    def register_cleanup_task(self, func):
+        if inspect.iscoroutinefunction(func):
+            self.async_cleanup_tasks.append(func)
+        else:
+            self.cleanup_tasks.append(func)
+
     def _app_call(self, func):
         annotations = inspect.getfullargspec(func).annotations
         kwargs = {
@@ -60,16 +82,26 @@ class Application:
         for task in self.setup_tasks:
             self._app_call(task)
 
-    def run(self):
-        for task in self.run_tasks:
+    def _process(self, tasks, async_tasks):
+        for task in tasks:
             self._app_call(task)
 
-        if not self.async_run_tasks:
+        if not async_tasks:
             return
 
-        async def async_tasks():
+        async def run_async_tasks():
             await asyncio.gather(*[
-                self._app_call(task) for task in self.async_run_tasks
+                self._app_call(task) for task in async_tasks
             ], return_exceptions=True)
 
-        asyncio.run(async_tasks())
+        asyncio.run(run_async_tasks())
+
+    def run(self):
+        self._process(self.run_tasks, self.async_run_tasks)
+
+    def cleanup(self):
+        # import traceback
+        # traceback.print_stack()
+        # print('called cleanup')
+        # TODO: fix signal cleanup call from cool and app
+        self._process(self.cleanup_tasks, self.async_cleanup_tasks)
