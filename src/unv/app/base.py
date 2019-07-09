@@ -24,14 +24,15 @@ class Application:
         if setup:
             self.setup()
 
-        self.cleaning = False
 
-        loop = asyncio.get_event_loop()
+        # FIXME: signals need to be properly updated
+        # self.cleaning = False
+        
+        # loop = asyncio.get_event_loop()
 
-        for sig in [signal.SIGINT, signal.SIGTERM]:
-            loop.add_signal_handler(sig, self.cleanup)
-            signal.signal(sig, self.cleanup)
-
+        # for sig in [signal.SIGINT, signal.SIGTERM]:
+        #     loop.add_signal_handler(sig, self.cleanup)
+        #     signal.signal(sig, self.cleanup)
 
     def register(self, app):
         type_ = type(app)
