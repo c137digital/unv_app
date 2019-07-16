@@ -24,10 +24,9 @@ class Application:
         if setup:
             self.setup()
 
-
         # FIXME: signals need to be properly updated
         # self.cleaning = False
-        
+
         # loop = asyncio.get_event_loop()
 
         # for sig in [signal.SIGINT, signal.SIGTERM]:

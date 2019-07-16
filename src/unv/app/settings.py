@@ -32,23 +32,25 @@ class ComponentSettings:
     @staticmethod
     def create(settings: dict = None, base_settings: dict = None) -> dict:
         """Create app settings, overrided by env."""
+        # add overrides module not just by parts (disable parts override)
         settings = settings or {}
         if base_settings:
             settings = update_dict_recur(settings, base_settings)
-        for key, value in os.environ.items():
-            if 'SETTINGS_' not in key:
-                continue
-            current_settings = settings
-            parts = [
-                part.lower()
-                for part in key.replace('SETTINGS_', '').split('_')
-            ]
-            last_index = len(parts) - 1
-            for index, part in enumerate(parts):
-                if index == last_index:
-                    current_settings[part] = _convert_value(value)
-                else:
-                    current_settings = current_settings.setdefault(part, {})
+        # os.environ.get('SETTINGS_OVERRIDES')
+        # for key, value in os.environ.items():
+        #     if 'SETTINGS_' not in key:
+        #         continue
+        #     current_settings = settings
+        #     parts = [
+        #         part.lower()
+        #         for part in key.replace('SETTINGS_', '').split('_')
+        #     ]
+        #     last_index = len(parts) - 1
+        #     for index, part in enumerate(parts):
+        #         if index == last_index:
+        #             current_settings[part] = _convert_value(value)
+        #         else:
+        #             current_settings = current_settings.setdefault(part, {})
         return settings
 
     def __init__(self):
