@@ -10,3 +10,5 @@
 [![PyPI license](https://img.shields.io/pypi/l/unv_app.svg)](https://pypi.python.org/pypi/unv_app/)
 [![PyPI version fury.io](https://badge.fury.io/py/unv.app.svg)](https://pypi.python.org/pypi/unv_app/)
 [![PyPI download month](https://img.shields.io/pypi/dm/unv_app.svg)](https://pypi.python.org/pypi/unv_app/)
+
+Core settings for all sub-applications
