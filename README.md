@@ -1,4 +1,4 @@
-# Core package for any UNV-based application
+# Core package for any UNV-based application (United Vision)
 
 [![Build Status](https://readthedocs.org/projects/unv_app/badge/?version=latest&style=flat)](https://readthedocs.org/projects/unv_app)
 [![Docs Build Status](https://travis-ci.org/c137digital/unv_app.svg?branch=master)](https://travis-ci.org/c137digital/unv_app)
