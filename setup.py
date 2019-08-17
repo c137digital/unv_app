@@ -27,6 +27,21 @@ setup(
         'cerberus',
         'unv.utils'
     ],
+    extras_require={
+        'dev': [
+            'pylint',
+            'pycodestyle',
+            'pytest',
+            'pytest-cov',
+            'pytest-env',
+            'pytest-pythonpath',
+            'autopep8',
+            'sphinx',
+            'setuptools',
+            'wheel',
+            'twine'
+        ]
+    },
     zip_safe=True,
     entry_points={
         'console_scripts': [

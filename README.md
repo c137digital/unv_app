@@ -1,4 +1,4 @@
-# Core package for any UNV-based application
+# Core package for any UNV-based application (United Vision)
 
 [![Build Status](https://readthedocs.org/projects/unv_app/badge/?version=latest&style=flat)](https://readthedocs.org/projects/unv_app)
 [![Docs Build Status](https://travis-ci.org/c137digital/unv_app.svg?branch=master)](https://travis-ci.org/c137digital/unv_app)
@@ -10,3 +10,5 @@
 [![PyPI license](https://img.shields.io/pypi/l/unv_app.svg)](https://pypi.python.org/pypi/unv_app/)
 [![PyPI version fury.io](https://badge.fury.io/py/unv.app.svg)](https://pypi.python.org/pypi/unv_app/)
 [![PyPI download month](https://img.shields.io/pypi/dm/unv_app.svg)](https://pypi.python.org/pypi/unv_app/)
+
+Core package for all sub-applications. Includes settings and component management.
