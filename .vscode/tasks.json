@@ -2,18 +2,20 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Python: Build",
+            "label": "Python: Cleanup Build",
             "type": "shell",
-            "command": ". activate.sh && python setup.py sdist bdist_wheel"
+            "command": "rm -rf ./build && rm -rf ./dist && rm -rf src/*.egg-info"
         },
         {
-            "label": "Python: Upload to testing PyPI",
+            "label": "Python: Build",
             "type": "shell",
-            "command": ". activate.sh && twine upload --repository-url https://test.pypi.org/legacy/ dist/* -u mortyspace"
+            "dependsOn": ["Python: Cleanup Build"],
+            "command": ". activate.sh && python setup.py sdist bdist_wheel"
         },
         {
             "label": "Python: Release package on PyPI",
             "type": "shell",
+            "dependsOn": ["Python: Build"],
             "command": ". activate.sh && twine upload dist/* -u mortyspace"
         },
         {
