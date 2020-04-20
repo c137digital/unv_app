@@ -31,6 +31,8 @@ class ProductionModule:
                 'items': [3, 2, 1]
             },
             'otherkey': {'debug': True, 'items': [10, 10, 10]}
+        }, {
+            'otherkey': {'debug': False}
         })
 
 

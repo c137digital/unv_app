@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='unv.app',
-    version='0.3.4',
+    version='0.3.5',
     description="""Core app package with settings manipulation""",
     url='http://github.com/c137digital/unv_app',
     author='Morty Space',

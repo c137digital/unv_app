@@ -34,7 +34,7 @@ class ComponentSettings:
         """Create app settings, overrided by env."""
         settings = settings or {}
         if base_settings:
-            settings = update_dict_recur(settings, base_settings)
+            settings = update_dict_recur(base_settings, settings)
         for key, value in os.environ.items():
             if 'SETTINGS_' not in key:
                 continue
