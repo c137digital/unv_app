@@ -89,12 +89,14 @@ class Application:
         if not async_tasks:
             return
 
-        async def run_async_tasks():
-            await asyncio.gather(*[
-                self._app_call(task) for task in async_tasks
-            ], return_exceptions=True)
-
-        asyncio.run(run_async_tasks())
+        if len(async_tasks) == 1:
+            asyncio.run(self._app_call(async_tasks[0]))
+        else:
+            async def run_async_tasks():
+                await asyncio.gather(*[
+                    self._app_call(task) for task in async_tasks
+                ])
+            asyncio.run(run_async_tasks())
 
     def run(self):
         self._process(self.run_tasks, self.async_run_tasks)
