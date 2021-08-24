@@ -32,9 +32,6 @@ class ComponentSettings:
             except ModuleNotFoundError:
                 pass
 
-        print('default', self.__class__.DEFAULT)
-        print('app settings', app_settings.get(self.__class__.KEY, {}))
-
         settings = update_dict_recur(
             self.__class__.DEFAULT, app_settings.get(self.__class__.KEY, {}))
         settings = validate_schema(self.__class__.SCHEMA, settings)
