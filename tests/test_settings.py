@@ -4,16 +4,17 @@ import importlib
 import pytest
 
 from unv.app.settings import ComponentSettings, SETTINGS
+from unv.app.utils import create_settings
 
 
 class InitModule:
     def __init__(self):
-        self.SETTINGS = ComponentSettings.create()
+        self.SETTINGS = create_settings()
 
 
 class DevelopmentModule:
     def __init__(self):
-        self.SETTINGS = ComponentSettings.create({
+        self.SETTINGS = create_settings({
             'app': {
                 'debug': True,
                 'port': 8090,
@@ -24,7 +25,7 @@ class DevelopmentModule:
 
 class ProductionModule:
     def __init__(self):
-        self.SETTINGS = ComponentSettings.create({
+        self.SETTINGS = create_settings({
             'app': {
                 'debug': False,
                 'port': 80,
@@ -38,7 +39,7 @@ class ProductionModule:
 
 class InvalidSettingsModule:
     def __init__(self):
-        self.SETTINGS = ComponentSettings.create({
+        self.SETTINGS = create_settings({
             'otherkey': {'debug': 1, 'items': ['asd', 10, 10]}
         })
 
@@ -86,12 +87,12 @@ def import_fake_module(name):
     }),
     ({'SETTINGS': 'app.settings.production'}, {
         'app': {'debug': False, 'items': [3, 2, 1], 'port': 80},
-        'otherkey': {'debug': True, 'items': [10, 10, 10]}
+        'otherkey': {'debug': False, 'items': [10, 10, 10]}
     }),
     ({
         'SETTINGS': 'app.settings.development',
-        'SETTINGS_APP_DEBUG': 'False',
-        'SETTINGS_OTHERKEY_DEBUG': 'True',
+        'SETTINGS_APP_DEBUG': 'false',
+        'SETTINGS_OTHERKEY_DEBUG': 'true',
         'SETTINGS_APP_PORT': '9020'
     }, {
         'app': {'debug': False, 'items': [1, 2, 3], 'port': 9020},

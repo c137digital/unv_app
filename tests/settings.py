@@ -1,6 +1,7 @@
-from unv.app.settings import ComponentSettings
+from unv.app.utils import create_settings
 
-SETTINGS = ComponentSettings.create({
+
+SETTINGS = create_settings({
     'app': {
         'components': [
             'component',
