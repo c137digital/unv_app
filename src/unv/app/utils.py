@@ -35,5 +35,3 @@ def create_settings(settings: dict = None, update_with: dict = None):
             else:
                 current_settings = current_settings.setdefault(part, {})
     return settings
-
-

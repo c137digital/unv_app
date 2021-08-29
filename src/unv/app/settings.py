@@ -60,6 +60,10 @@ class AppSettings(ComponentSettings):
     }
 
     @property
+    def env(self):
+        return self._data['env']
+
+    @property
     def is_dev(self):
         return self._data['env'] == 'dev'
 

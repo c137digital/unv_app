@@ -116,6 +116,7 @@ def test_app_components_with_env_default():
     assert not SETTINGS.is_dev
     assert SETTINGS.is_prod
     assert not SETTINGS.is_test
+    assert SETTINGS.env == 'prod'
 
     assert list(SETTINGS.get_components())
 
