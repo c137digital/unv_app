@@ -118,6 +118,9 @@ def test_app_components_with_env_default():
     assert not SETTINGS.is_test
     assert SETTINGS.env == 'prod'
 
+    assert SETTINGS.current_dir.name == 'tests'
+    assert SETTINGS.current_file.name == 'settings.py'
+
     assert list(SETTINGS.get_components())
 
 

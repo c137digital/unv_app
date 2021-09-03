@@ -46,7 +46,7 @@ class WebFakeModule:
     @staticmethod
     def link_components(app: Application):
         web_app = app[WebApplication]
-        for component in app.components:
+        for _ in app.components:
             web_app.components_count += 1
 
     @classmethod

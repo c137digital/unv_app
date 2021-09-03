@@ -1,5 +1,8 @@
 import os
+import inspect
 import importlib
+
+from pathlib import Path
 
 import cerberus
 
@@ -74,6 +77,19 @@ class AppSettings(ComponentSettings):
     @property
     def is_test(self):
         return self._data['env'] == 'test'
+
+    @property
+    def current_file(self):
+        try:
+            current_settings = importlib.import_module(os.environ['SETTINGS'])
+            file_path = inspect.getfile(current_settings)
+        except (KeyError, ModuleNotFoundError):
+            file_path = inspect.getframeinfo(inspect.currentframe()).filename
+        return Path(file_path).resolve()
+
+    @property
+    def current_dir(self):
+        return self.current_file.parent
 
     def get_components(self):
         for component in self._data['components']:
